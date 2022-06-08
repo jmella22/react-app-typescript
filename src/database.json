@@ -1,0 +1,13 @@
+[
+  {
+    "firstname": "jose",
+    "age": 32,
+    "avatar": "https://i.pravatar.cc/150?u=jose",
+    "description": "hola mundo aqui estoy yo"
+  },
+  {
+    "firstname": "yasna",
+    "age": 34,
+    "avatar": "https://i.pravatar.cc/150?u=yasna"
+  }
+]
