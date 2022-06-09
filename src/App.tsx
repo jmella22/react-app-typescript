@@ -20,6 +20,11 @@ function App() {
   };
 
   useEffect(() => {
+    const fetchSubs = (): Promise<any> => {
+      return fetch("https://breakingbadapi.com/api/characters").then((res) =>
+        res.json()
+      );
+    };
     setSubs(db);
   }, []);
 

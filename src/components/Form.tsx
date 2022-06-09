@@ -1,32 +1,36 @@
-import React, { useState } from "react";
+import React from "react";
 import { Sub } from "../types";
-
-interface FormState {
-  inputVales: Sub;
-}
+import useNewSubForm from "./hooks/useNewSubForm";
 
 interface FormProps {
   onNewSub: (newSub: Sub) => void;
 }
 
 const Form = ({ onNewSub }: FormProps) => {
-  const [inputValues, setInputValues] = useState<FormState["inputVales"]>({
-    firstname: "",
-    age: 0,
-    avatar: "",
-    description: "",
-  });
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onNewSub(inputValues);
-  };
+  const [inputValues, dispath] = useNewSubForm();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    const { name, value } = e.target;
+    dispath({
+      type: "CHANGE_VALUE",
+      payload: {
+        inputName: name,
+        inputValue: value,
+      },
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setInputValues({ ...inputValues, [e.target.name]: e.target.value });
+    onNewSub(inputValues);
+    dispath({ type: "CLEAR" });
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    dispath({ type: "CLEAR" });
   };
 
   return (
@@ -38,6 +42,7 @@ const Form = ({ onNewSub }: FormProps) => {
           type="text"
           placeholder="firstname"
           name="firstname"
+          required
         />
         <input
           onChange={handleChange}
@@ -45,6 +50,7 @@ const Form = ({ onNewSub }: FormProps) => {
           type="number"
           placeholder="age"
           name="age"
+          required
         />
         <input
           onChange={handleChange}
@@ -52,6 +58,7 @@ const Form = ({ onNewSub }: FormProps) => {
           type="text"
           placeholder="avatar"
           name="avatar"
+          required
         />
         <textarea
           onChange={handleChange}
@@ -59,7 +66,10 @@ const Form = ({ onNewSub }: FormProps) => {
           placeholder="description"
           name="description"
         />
-        <button>save</button>
+        <button type="button" onClick={handleClick}>
+          clear
+        </button>
+        <button type="submit">save</button>
       </form>
     </div>
   );
