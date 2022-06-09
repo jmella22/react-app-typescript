@@ -5,7 +5,7 @@ import "./App.css";
 import List from "./components/List";
 import Form from "./components/Form";
 
-import { Sub } from "./types";
+import { Sub, SubsResponseFromApi } from "./types";
 
 interface AppState {
   subs: Array<Sub>;
@@ -20,12 +20,38 @@ function App() {
   };
 
   useEffect(() => {
-    const fetchSubs = (): Promise<any> => {
+    const fetchSubs = (): Promise<Array<SubsResponseFromApi>> => {
       return fetch("https://breakingbadapi.com/api/characters").then((res) =>
         res.json()
       );
     };
-    setSubs(db);
+
+    const mapFromApiToSubs = (
+      apiResponse: Array<SubsResponseFromApi>
+    ): Array<Sub> => {
+      return apiResponse.map((subFromApi) => {
+        const {
+          name: firstname,
+          char_id: age,
+          img: avatar,
+          status: description,
+        } = subFromApi;
+        return {
+          firstname,
+          age,
+          avatar,
+          description,
+        };
+      });
+    };
+
+    fetchSubs().then(mapFromApiToSubs).then(setSubs);
+    // .then((j) => {
+    //   console.log(j);
+    //   const subs = mapFromApiToSubs(j);
+    //   setSubs(subs);
+    // });
+    // setSubs(db);
   }, []);
 
   return (
